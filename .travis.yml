@@ -7,3 +7,6 @@ node_js:
 script:
   - make lint
   - make test
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
