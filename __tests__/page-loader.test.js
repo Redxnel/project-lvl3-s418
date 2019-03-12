@@ -4,11 +4,10 @@ import { promises as fs } from 'fs';
 import os from 'os';
 import path from 'path';
 import axios from 'axios';
-import load from '../../src/load';
+import load from '../src';
 
 const host = 'http://localhost';
 
-axios.defaults.host = host;
 axios.defaults.adapter = httpAdapter;
 
 let tmpdir = '';
