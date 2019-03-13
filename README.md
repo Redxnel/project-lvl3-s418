@@ -17,10 +17,10 @@ npm install -g page-loader-redxnel
 
 ## Использование
 
-$ page-loader [options] `<page>`
+`$ page-loader [options] <page>`
 
 # Доступные опции
 
-* -V, --version        акутальная версия пргограммы
-* -o, --output [path]  директория, в которую нужно сохранить
-* -h, --help           информация об опциях
+* `-V, --version        актуальная версия пргограммы`
+* `-o, --output [path]  директория, в которую нужно сохранить`
+* `-h, --help           информация об опциях`
