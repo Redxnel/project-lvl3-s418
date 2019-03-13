@@ -12,10 +12,12 @@ axios.defaults.adapter = httpAdapter;
 
 let tmpdir = '';
 let dataCss = '';
+let dataHtml = '';
 
 beforeEach(async () => {
   tmpdir = await fs.mkdtemp(path.join(os.tmpdir(), 'test'));
   dataCss = await fs.readFile('./__tests__/__fixtures__/style.css', 'utf-8');
+  dataHtml = await fs.readFile('./__tests__/__fixtures__/resume.html', 'utf-8')
 });
 
 describe('Test', () => {
@@ -45,7 +47,9 @@ describe('Test', () => {
     await load(host, tmpdir);
     const recievedData = await fs.readFile(path.join(tmpdir, 'localhost.html'), 'utf-8');
     const recievedCss = await fs.readFile(path.join(tmpdir, 'localhost_files/style.css'), 'utf-8');
-    expect(recievedData.length).toBe(4971);
+    const quantityFileInTmpDir = await fs.readdir(path.join(tmpdir, 'localhost_files'));
+    expect(recievedData).not.toMatch(dataHtml);
     expect(recievedCss).toMatch(dataCss);
+    expect(quantityFileInTmpDir.length).toBe(2);
   });
 });

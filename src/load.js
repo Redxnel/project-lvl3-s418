@@ -3,7 +3,10 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import path from 'path';
 import { resolve } from 'url';
+import debug from 'debug';
 import buildName from './buildName';
+
+const log = debug('page-loader');
 
 const getDataFromUrl = uri => axios({
   method: 'get',
@@ -36,7 +39,8 @@ const getLinksAndModifyHtml = (html, filepath) => {
     }).get();
     return [...acc, ...findedLink].filter(elem => elem);
   }, []);
-  return { links, html: $.html() };
+  log('New html created success!')
+  return { links, html: $.html({ decodeEntities: false }) };
 };
 
 export default (page, filepath) => {
@@ -51,7 +55,9 @@ export default (page, filepath) => {
       const linksFromPage = content.links;
       return Promise.all(linksFromPage.map(link => getDataFromUrl(resolve(page, link))
         .then((data) => {
-          const pathToWrite = path.join(generateNameLink(link, directoryForResource));
+          const updatedLink = generateNameLink(link, directoryForResource);
+          const pathToWrite = path.join(updatedLink);
+          log(`${link} updated to ${updatedLink}`);
           return fs.writeFile(pathToWrite, data, 'utf-8');
         })));
     })
@@ -59,5 +65,8 @@ export default (page, filepath) => {
       dirpath = buildName(page, filepath, '.html');
       return fs.writeFile(dirpath, newHtml, 'utf-8');
     })
-    .then(() => dirpath);
+    .then(() => {
+      log(`page written on disc in ${dirpath}`);
+      return dirpath;
+    });
 };
