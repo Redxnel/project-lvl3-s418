@@ -11,19 +11,41 @@ const host = 'http://localhost';
 axios.defaults.adapter = httpAdapter;
 
 let tmpdir = '';
+let dataCss = '';
 
-beforeAll(async () => {
+beforeEach(async () => {
   tmpdir = await fs.mkdtemp(path.join(os.tmpdir(), 'test'));
+  dataCss = await fs.readFile('./__tests__/__fixtures__/style.css', 'utf-8');
 });
 
 describe('Test', () => {
-  test('Download page', async () => {
+  it('Download simple page', async () => {
     nock(host)
       .get('/test')
       .reply(200, 'test data');
 
     await load(`${host}/test`, tmpdir);
     const recievedData = await fs.readFile(path.join(tmpdir, 'localhost-test.html'), 'utf-8');
-    return expect(recievedData).toBe('test data');
+    return expect(recievedData).toBe('<html><head></head><body>test data</body></html>');
+  });
+
+  it('Download page and resource', async () => {
+    nock(host)
+      .get('/')
+      .replyWithFile(200, `${__dirname}/__fixtures__/resume.html`);
+
+    nock(host)
+      .get('/style.css')
+      .replyWithFile(200, `${__dirname}/__fixtures__/style.css`);
+
+    nock(host)
+      .get('/resume.png')
+      .replyWithFile(200, `${__dirname}/__fixtures__/resume.png`);
+
+    await load(host, tmpdir);
+    const recievedData = await fs.readFile(path.join(tmpdir, 'localhost.html'), 'utf-8');
+    const recievedCss = await fs.readFile(path.join(tmpdir, 'localhost_files/style.css'), 'utf-8');
+    expect(recievedData.length).toBe(4971);
+    expect(recievedCss).toMatch(dataCss);
   });
 });
