@@ -17,7 +17,7 @@ let dataHtml = '';
 beforeEach(async () => {
   tmpdir = await fs.mkdtemp(path.join(os.tmpdir(), 'test'));
   dataCss = await fs.readFile('./__tests__/__fixtures__/style.css', 'utf-8');
-  dataHtml = await fs.readFile('./__tests__/__fixtures__/resume.html', 'utf-8')
+  dataHtml = await fs.readFile('./__tests__/__fixtures__/resume.html', 'utf-8');
 });
 
 describe('Test', () => {

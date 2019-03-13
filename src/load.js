@@ -39,7 +39,7 @@ const getLinksAndModifyHtml = (html, filepath) => {
     }).get();
     return [...acc, ...findedLink].filter(elem => elem);
   }, []);
-  log('New html created success!')
+  log('New html created success!');
   return { links, html: $.html({ decodeEntities: false }) };
 };
 
