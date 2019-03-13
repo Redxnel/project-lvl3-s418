@@ -11,16 +11,16 @@ npm install -g page-loader-redxnel
 
 [![asciicast](https://asciinema.org/a/3JHSSrRzBXZyu3b09OZGpCNTk.svg)](https://asciinema.org/a/3JHSSrRzBXZyu3b09OZGpCNTk)
 
-##Описание
+## Описание
 
 **Загрузчик страниц** позволяет скачивать страницу из сети и сохранять её в указанную папку (по умолчанию в директорию запуска программы).
 
-##Использование
+## Использование
 
-$ page-loader [options] <page>
+$ page-loader [options] `<page>`
 
-#Доступные опции
+# Доступные опции
 
-  -V, --version        акутальная версия пргограммы
-  -o, --output [path]  директория, в которую нужно сохранить
-  -h, --help           информация об опциях
+* -V, --version        акутальная версия пргограммы
+* -o, --output [path]  директория, в которую нужно сохранить
+* -h, --help           информация об опциях
