@@ -2,6 +2,7 @@
 import program from 'commander';
 import info from '../../package.json';
 import chalk from 'chalk';
+import Listr from 'listr';
 import loadPage from '..';
 
 program
@@ -10,7 +11,6 @@ program
   .version(info.version)
   .option('-o, --output [path]', 'Output path', process.cwd())
   .action(page => loadPage(page, program.output)
-    .then(filepath => console.log(chalk.green(`Page loaded in ${filepath}`)))
     .catch((err) => {
       console.error(chalk.red(err.message));
       process.exit(1);
