@@ -1,6 +1,6 @@
 {
   "name": "page-loader-redxnel",
-  "version": "0.1.17",
+  "version": "0.1.19",
   "description": "Utility to download page and save it",
   "main": "index.js",
   "bin": {
@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "chalk": "^2.4.2",
     "cheerio": "^1.0.0-rc.2",
     "commander": "^2.19.0",
     "debug": "^4.1.1",

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import program from 'commander';
 import info from '../../package.json';
+import chalk from 'chalk';
 import loadPage from '..';
 
 program
@@ -9,9 +10,9 @@ program
   .version(info.version)
   .option('-o, --output [path]', 'Output path', process.cwd())
   .action(page => loadPage(page, program.output)
-    .then(filepath => console.log(`Page loaded in ${filepath}`))
+    .then(filepath => console.log(chalk.green(`Page loaded in ${filepath}`)))
     .catch((err) => {
-      console.error(err.message);
-      program.exit(1);
+      console.error(chalk.red(err.message));
+      process.exit(1);
     }))
   .parse(process.argv);
