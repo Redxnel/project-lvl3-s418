@@ -44,12 +44,13 @@ const getLinksAndModifyHtml = (html, filepath, ctx) => {
     }).get();
     return [...acc, ...findedLink].filter(elem => elem);
   }, []);
-  log(chalk.magenta('New html created success!'));
   newHtml = $.html({ decodeEntities: false });
   ctx.content = { links, html: newHtml };
+  log(chalk.magenta('new HTML created!'));
 };
 
 export default (page, filepath) => {
+  log(chalk.magenta('run page-loader'));
   const dirpath = buildName(page, filepath, '.html');
   const directoryForResource = buildName(page, filepath, '_files');
 
@@ -80,7 +81,7 @@ export default (page, filepath) => {
             })
               .then((response) => {
                 const pathToWrite = generateNameLink(link, directoryForResource);
-                log(chalk.yellow(`${link} updated to ${pathToWrite}`));
+                log(chalk.magenta(`${link} updated to ${pathToWrite}`));
                 return fs.writeFile(pathToWrite, response.data, 'utf-8');
               })));
           },
@@ -93,7 +94,7 @@ export default (page, filepath) => {
     },
     {
       title: chalk.green(`Done! The page is saved in ${dirpath}`),
-      task: () => log(chalk.green(`Page ${page} written on disc in ${dirpath}`)),
+      task: () => log(chalk.magenta('Page loaded success!')),
     },
   ]);
 

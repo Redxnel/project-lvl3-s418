@@ -9,7 +9,15 @@
 ## Установка пакета
 npm install -g page-loader-redxnel
 
-[![asciicast](https://asciinema.org/a/3JHSSrRzBXZyu3b09OZGpCNTk.svg)](https://asciinema.org/a/3JHSSrRzBXZyu3b09OZGpCNTk)
+[![asciicast](https://asciinema.org/a/ELcd9OesmwTlQZHe6uFJATqAU.svg)](https://asciinema.org/a/ELcd9OesmwTlQZHe6uFJATqAU)
+
+### Запуск пакета
+
+[![asciicast](https://asciinema.org/a/qw2amCoUNoMozmzwQgXsw5Bl7.svg)](https://asciinema.org/a/qw2amCoUNoMozmzwQgXsw5Bl7)
+
+### DEBUG
+
+[![asciicast](https://asciinema.org/a/GzdMxOT17r1PnqQQ2Hb0xrDWH.svg)](https://asciinema.org/a/GzdMxOT17r1PnqQQ2Hb0xrDWH)
 
 ## Описание
 
