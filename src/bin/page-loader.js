@@ -2,7 +2,6 @@
 import program from 'commander';
 import info from '../../package.json';
 import chalk from 'chalk';
-import Listr from 'listr';
 import loadPage from '..';
 
 program

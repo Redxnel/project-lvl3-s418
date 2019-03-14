@@ -16,8 +16,8 @@ const getDataFromUrl = (uri, ctx) => axios({
   url: uri,
   responseType: 'arrayBuffer',
 })
-  .then(response => {
-    return ctx.data = response.data;
+  .then((response) => {
+    ctx.data = response.data;
   });
 
 const tags = {
@@ -46,7 +46,7 @@ const getLinksAndModifyHtml = (html, filepath, ctx) => {
   }, []);
   log(chalk.magenta('New html created success!'));
   newHtml = $.html({ decodeEntities: false });
-  return ctx.content = { links, html: newHtml };
+  ctx.content = { links, html: newHtml };
 };
 
 export default (page, filepath) => {
@@ -56,42 +56,40 @@ export default (page, filepath) => {
   const tasks = new Listr([
     {
       title: chalk.green('The page is loading'),
-      task: () => {
-        return new Listr([
-          {
-            title: chalk.yellow('Create a directory to download the resource'),
-            task: () => fs.mkdir(directoryForResource),
+      task: () => new Listr([
+        {
+          title: chalk.yellow('Create a directory to download the resource'),
+          task: () => fs.mkdir(directoryForResource),
+        },
+        {
+          title: chalk.yellow('Getting HTML data from page'),
+          task: ctx => getDataFromUrl(page, ctx),
+        },
+        {
+          title: chalk.yellow('Modifying HTML and getting resource'),
+          task: ctx => getLinksAndModifyHtml(ctx.data, directoryForResource, ctx),
+        },
+        {
+          title: chalk.yellow('Resources downloading and saving'),
+          task: (ctx) => {
+            const linksFromPage = ctx.content.links;
+            return Promise.all(linksFromPage.map(link => axios({
+              method: 'get',
+              url: resolve(page, link),
+              responseType: 'arrayBuffer',
+            })
+              .then((response) => {
+                const pathToWrite = generateNameLink(link, directoryForResource);
+                log(chalk.yellow(`${link} updated to ${pathToWrite}`));
+                return fs.writeFile(pathToWrite, response.data, 'utf-8');
+              })));
           },
-          {
-            title: chalk.yellow('Getting HTML data from page'),
-            task: ctx => getDataFromUrl(page, ctx),
-          },
-          {
-            title: chalk.yellow('Modifying HTML and getting resource'),
-            task: ctx => getLinksAndModifyHtml(ctx.data, directoryForResource, ctx),
-          },
-          {
-            title: chalk.yellow('Resources downloading and saving'),
-            task: (ctx) => {
-              const linksFromPage = ctx.content.links;
-              return Promise.all(linksFromPage.map(link => axios({
-                method: 'get',
-                url: resolve(page, link),
-                responseType: 'arrayBuffer',
-              })
-                .then((response) => {
-                  const pathToWrite = generateNameLink(link, directoryForResource);
-                  log(chalk.yellow(`${link} updated to ${pathToWrite}`));
-                  return fs.writeFile(pathToWrite, response.data, 'utf-8');
-                })));
-            },
-          },
-          {
-            title: chalk.yellow(`Saving the page`),
-            task: () => fs.writeFile(dirpath, newHtml, 'utf-8'),
-          },
-        ]);
-      }
+        },
+        {
+          title: chalk.yellow('Saving the page'),
+          task: () => fs.writeFile(dirpath, newHtml, 'utf-8'),
+        },
+      ]),
     },
     {
       title: chalk.green(`Done! The page is saved in ${dirpath}`),
