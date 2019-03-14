@@ -10,5 +10,8 @@ program
   .option('-o, --output [path]', 'Output path', process.cwd())
   .action(page => loadPage(page, program.output)
     .then(filepath => console.log(`Page loaded in ${filepath}`))
-    .catch(console.log))
+    .catch((err) => {
+      console.error(err.message);
+      program.exit(1);
+    }))
   .parse(process.argv);

@@ -66,7 +66,7 @@ export default (page, filepath) => {
       return fs.writeFile(dirpath, newHtml, 'utf-8');
     })
     .then(() => {
-      log(`page written on disc in ${dirpath}`);
+      log(`Page ${page} written on disc in ${dirpath}`);
       return dirpath;
     });
 };

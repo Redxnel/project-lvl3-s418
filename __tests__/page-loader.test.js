@@ -52,4 +52,20 @@ describe('Test', () => {
     expect(recievedCss).toMatch(dataCss);
     expect(quantityFileInTmpDir.length).toBe(2);
   });
+
+  it('Errors 404', async () => {
+    nock(host)
+      .get('/')
+      .reply(404);
+
+    await expect(load(host, tmpdir)).rejects.toThrowErrorMatchingSnapshot();
+  });
+
+  it('Errors directory', async () => {
+    nock(host)
+      .get('/test')
+      .reply(200, 'test data');
+
+    await expect(load(`${host}/test`, 'var')).rejects.toThrowErrorMatchingSnapshot();
+  });
 });
