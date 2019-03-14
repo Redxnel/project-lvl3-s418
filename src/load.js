@@ -1,9 +1,9 @@
 import { promises as fs } from 'fs';
 import axios from 'axios';
 import cheerio from 'cheerio';
-import path from 'path';
 import { resolve } from 'url';
 import debug from 'debug';
+import chalk from 'chalk';
 import buildName from './buildName';
 
 const log = debug('page-loader');
@@ -39,7 +39,7 @@ const getLinksAndModifyHtml = (html, filepath) => {
     }).get();
     return [...acc, ...findedLink].filter(elem => elem);
   }, []);
-  log('New html created success!');
+  log(chalk.magenta('New html created success!'));
   return { links, html: $.html({ decodeEntities: false }) };
 };
 
@@ -55,9 +55,8 @@ export default (page, filepath) => {
       const linksFromPage = content.links;
       return Promise.all(linksFromPage.map(link => getDataFromUrl(resolve(page, link))
         .then((data) => {
-          const updatedLink = generateNameLink(link, directoryForResource);
-          const pathToWrite = path.join(updatedLink);
-          log(`${link} updated to ${updatedLink}`);
+          const pathToWrite = generateNameLink(link, directoryForResource);
+          log(chalk.yellow(`${link} updated to ${pathToWrite}`));
           return fs.writeFile(pathToWrite, data, 'utf-8');
         })));
     })
@@ -66,7 +65,7 @@ export default (page, filepath) => {
       return fs.writeFile(dirpath, newHtml, 'utf-8');
     })
     .then(() => {
-      log(`Page ${page} written on disc in ${dirpath}`);
+      log(chalk.green(`Page ${page} written on disc in ${dirpath}`));
       return dirpath;
     });
 };
