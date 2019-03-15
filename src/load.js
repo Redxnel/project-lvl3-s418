@@ -8,6 +8,7 @@ import Listr from 'listr';
 import buildName from './buildName';
 
 let newHtml = '';
+let directoryForResource = '';
 
 const log = debug('page-loader');
 
@@ -49,10 +50,25 @@ const getLinksAndModifyHtml = (html, filepath, ctx) => {
   log(chalk.magenta('new HTML created!'));
 };
 
+const writeResourceOnDisc = (page, linksFromPage) => linksFromPage.map(link => (
+  {
+    title: chalk.yellow(`Download: ${link}`),
+    task: () => axios({
+      method: 'get',
+      url: resolve(page, link),
+      responseType: 'arrayBuffer',
+    })
+      .then((response) => {
+        const pathToWrite = generateNameLink(link, directoryForResource);
+        log(chalk.magenta(`${link} updated to ${pathToWrite}`));
+        return fs.writeFile(pathToWrite, response.data, 'utf-8');
+      }),
+  }));
+
 export default (page, filepath) => {
   log(chalk.magenta('run page-loader'));
   const dirpath = buildName(page, filepath, '.html');
-  const directoryForResource = buildName(page, filepath, '_files');
+  directoryForResource = buildName(page, filepath, '_files');
 
   const tasks = new Listr([
     {
@@ -72,19 +88,8 @@ export default (page, filepath) => {
         },
         {
           title: chalk.yellow('Resources downloading and saving'),
-          task: (ctx) => {
-            const linksFromPage = ctx.content.links;
-            return Promise.all(linksFromPage.map(link => axios({
-              method: 'get',
-              url: resolve(page, link),
-              responseType: 'arrayBuffer',
-            })
-              .then((response) => {
-                const pathToWrite = generateNameLink(link, directoryForResource);
-                log(chalk.magenta(`${link} updated to ${pathToWrite}`));
-                return fs.writeFile(pathToWrite, response.data, 'utf-8');
-              })));
-          },
+          task: ctx => new Listr(writeResourceOnDisc(page, ctx.content.links, ctx),
+            { concurrent: true }),
         },
         {
           title: chalk.yellow('Saving the page'),

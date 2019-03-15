@@ -1,6 +1,6 @@
 {
   "name": "page-loader-redxnel",
-  "version": "0.1.44",
+  "version": "0.1.50",
   "description": "Utility to download page and save it",
   "main": "index.js",
   "bin": {
